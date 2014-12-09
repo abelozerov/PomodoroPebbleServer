@@ -11,21 +11,15 @@ $(function() {
 
     $(".pb-btn-start").on("click", function() {
         sendTimerMessage("start");
-        $(".pb-btn-start").hide();
-        $(".pb-btn-pause").show();
-        $(".pb-btn-stop").show();
+        _renderInProgressView();
     });
     $(".pb-btn-pause").on("click", function() {
         sendTimerMessage("pause");
-        $(".pb-btn-start").show();
-        $(".pb-btn-pause").hide();
-        $(".pb-btn-stop").show();
+        _renderPausedView();
     });
     $(".pb-btn-stop").on("click", function() {
         sendTimerMessage("stop");
-        $(".pb-btn-start").show();
-        $(".pb-btn-pause").hide();
-        $(".pb-btn-stop").hide();
+        _renderStoppedView();
     });
 
     setInterval(function() {
@@ -59,13 +53,19 @@ $(function() {
             if (timerState.timestampStarted) {
                 elapsed = (timerState.timestampStarted + interval) - _getCurrentTimestamp();
             }
+            _renderInProgressView();
 
         } else if(timerState.state == "paused") {
 
             if (timerState.timestampStarted && timerState.timestampPaused) {
                 elapsed = interval - (timerState.timestampPaused - timerState.timestampStarted);
             }
+            _renderPausedView();
 
+        } else if(timerState.state == "stopped") {
+
+            _renderStoppedView();
+            
         }
 
         if(elapsed) {
@@ -78,6 +78,24 @@ $(function() {
 
     function _getCurrentTimestamp() {
         return Math.floor(new Date() / 1000);
+    }
+
+    function _renderInProgressView() {
+        $(".pb-btn-start").hide();
+        $(".pb-btn-pause").show();
+        $(".pb-btn-stop").show();
+    }
+
+    function _renderPausedView() {
+        $(".pb-btn-start").show();
+        $(".pb-btn-pause").hide();
+        $(".pb-btn-stop").show();
+    }
+
+    function _renderStoppedView() {
+        $(".pb-btn-start").show();
+        $(".pb-btn-pause").hide();
+        $(".pb-btn-stop").hide();
     }
 
 })
