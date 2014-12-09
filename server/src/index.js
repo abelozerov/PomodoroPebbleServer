@@ -2,12 +2,17 @@
  * Created by alexeybelozerov on 08/12/14.
  */
 
-var express = require('express')
+var express = require('express');
+var exphbs  = require('express-handlebars');
 var app = express();
 
+app.use(express.static(__dirname + '/public'));
+app.engine('handlebars', exphbs());
+app.set('view engine', 'handlebars')
+
 var constants = {
-    workIntervalLength: 1500, // seconds,
-    restIntervalLength: 300 // seconds
+    workIntervalLength: 1500/60, // seconds,
+    restIntervalLength: 300/60 // seconds
 }
 
 var currentTimer = {
@@ -18,8 +23,7 @@ var currentTimer = {
 };
 
 app.get('/', function (req, res) {
-    // TODO landing page render
-    res.send('Hello World')
+    res.render("index");
 });
 
 app.get('/timer', function (req, res) {
@@ -33,7 +37,7 @@ app.post('/timer/start', function (req, res) {
             currentTimer.state = "progress";
             break;
         case "paused":
-            currentTimer.timestampStarted = currentTimer.timestampPaused - currentTimer.timestampStarted;
+            currentTimer.timestampStarted = _getCurrentTimestamp() - (currentTimer.timestampPaused - currentTimer.timestampStarted);
             currentTimer.timestampPaused = null;
             currentTimer.state = "progress";
             break;
@@ -65,6 +69,7 @@ app.post('/timer/stop', function (req, res) {
         case "paused":
             currentTimer.timestampStarted = null;
             currentTimer.timestampPaused = null;
+            currentTimer.type = "work";
             currentTimer.state = "stopped";
             break;
         case "stopped":
@@ -76,8 +81,8 @@ app.post('/timer/stop', function (req, res) {
 });
 
 function _getCurrentTimestamp() {
-    return Math.floor(new Date() / 1000)
-        / 60; // for testing 1 second = 1 min, time boost x60
+    return Math.floor(new Date() / 1000);
+        /// 60; // for testing 1 second = 1 min, time boost x60
 }
 
 function _timestampToDate(unixTime) {
@@ -88,12 +93,12 @@ setInterval(function() {
 
     switch (currentTimer.state) {
         case "progress":
-            var timeInterval = _timestampToDate(currentTimer.timestampPaused - currentTimer.timestampStarted);
+            var timeInterval = _timestampToDate(_getCurrentTimestamp() - currentTimer.timestampStarted);
 
-            if(currentTimer.type = "work" && timeInterval >= constants.workIntervalLength) {
+            if(currentTimer.type == "work" && timeInterval >= constants.workIntervalLength) {
                 currentTimer.type = "rest";
                 currentTimer.timestampStarted = _getCurrentTimestamp() - timeInterval + constants.workIntervalLength;
-            } else if(currentTimer.type = "rest" && timeInterval >= constants.restIntervalLength) {
+            } else if(currentTimer.type == "rest" && timeInterval >= constants.restIntervalLength) {
                 currentTimer.type = "work";
                 currentTimer.timestampStarted = _getCurrentTimestamp() - timeInterval + constants.restIntervalLength;
             }

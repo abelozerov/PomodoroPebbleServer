@@ -1,0 +1,13 @@
+body.pb-app {
+  background-color: Red;
+  color: White; }
+  body.pb-app.pb-app-state-rest {
+    background-color: gray; }
+  body.pb-app .pb-content {
+    width: 300px;
+    margin: 0 auto;
+    text-align: center; }
+    body.pb-app .pb-content .pb-clock {
+      font-size: 72px; }
+      body.pb-app .pb-content .pb-clock div {
+        display: inline-block; }
