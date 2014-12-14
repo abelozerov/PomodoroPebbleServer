@@ -1,13 +1,53 @@
+@import url(http://fonts.googleapis.com/css?family=Roboto+Condensed:300|Roboto:100,300);
+html {
+  height: 100%; }
+
 body.pb-app {
-  background-color: Red;
-  color: White; }
+  background-color: #f44336;
+  color: White;
+  height: 100%;
+  position: relative;
+  font-family: 'Roboto', sans-serif; }
   body.pb-app.pb-app-state-rest {
-    background-color: gray; }
+    background-color: #888; }
+    body.pb-app.pb-app-state-rest .pb-content .pb-buttons .btn-default {
+      background-color: #aaa; }
+      body.pb-app.pb-app-state-rest .pb-content .pb-buttons .btn-default:hover {
+        background-color: #f44336; }
   body.pb-app .pb-content {
-    width: 300px;
-    margin: 0 auto;
+    width: 500px;
+    height: 500px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -250px 0 0 -250px;
     text-align: center; }
+    body.pb-app .pb-content .pb-pomodoro-counter-wrapper {
+      font-size: 36pt;
+      font-family: 'Roboto', sans-serif;
+      font-weight: 300; }
     body.pb-app .pb-content .pb-clock {
-      font-size: 72px; }
+      font-size: 130pt;
+      font-family: 'Roboto', sans-serif;
+      font-weight: 100; }
       body.pb-app .pb-content .pb-clock div {
         display: inline-block; }
+    body.pb-app .pb-content .pb-buttons {
+      width: 500px; }
+      body.pb-app .pb-content .pb-buttons .btn-default {
+        font-size: 36pt;
+        line-height: 90px;
+        font-family: 'Roboto Condensed', sans-serif;
+        font-weight: 300;
+        text-transform: uppercase;
+        background-color: #d24439;
+        color: #fff;
+        border: none;
+        height: 100px;
+        width: 240px;
+        float: left; }
+        body.pb-app .pb-content .pb-buttons .btn-default:hover {
+          background-color: #de3c31; }
+      body.pb-app .pb-content .pb-buttons .pb-btn-stop {
+        float: right;
+        width: 50%; }

@@ -78,6 +78,7 @@ app.post('/timer/stop', function (req, res) {
         default:
             break;
     }
+    currentTimer.pomodoroCounter = 1;
 
     res.send(currentTimer)
 });

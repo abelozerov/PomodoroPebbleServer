@@ -43,9 +43,11 @@ $(function() {
         if (timerState.type == 'work') {
             interval = constants.workIntervalLength;
             $(".pb-app").removeClass("pb-app-state-rest");
+            $(".pb-pomodoro-counter").text("Pomodoro #" + timerState.pomodoroCounter);
         } else if (timerState.type == "rest") {
             interval = constants.restIntervalLength;
             $(".pb-app").addClass("pb-app-state-rest");
+            $(".pb-pomodoro-counter").text("Take a rest");
         }
         var minutes = Math.floor(interval / 60);
         var seconds = interval % 60;
@@ -87,9 +89,8 @@ $(function() {
             if(timerState.state != "stopped")
                 minutes = seconds = 0;
         }
-        $(".pb-clock-minutes").text(minutes);
-        $(".pb-clock-seconds").text(seconds);
-        $(".pb-pomodoro-counter").text(timerState.pomodoroCounter);
+        $(".pb-clock-minutes").text((minutes < 10? "0" : "") + minutes);
+        $(".pb-clock-seconds").text((seconds < 10? "0" : "") + seconds);
     }
 
     function _getCurrentTimestamp() {
@@ -103,6 +104,7 @@ $(function() {
     }
 
     function _renderPausedView() {
+        $(".pb-btn-start").css("width", "");
         $(".pb-btn-start").show();
         $(".pb-btn-pause").hide();
         $(".pb-btn-stop").show();
@@ -110,6 +112,7 @@ $(function() {
 
     function _renderStoppedView() {
         $(".pb-btn-start").show();
+        $(".pb-btn-start").css("width", "100%");
         $(".pb-btn-pause").hide();
         $(".pb-btn-stop").hide();
     }
