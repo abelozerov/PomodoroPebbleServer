@@ -4,6 +4,8 @@
 
 $(function() {
 
+    console.log("Date: " + (new Date().getTime() / 1000));
+
     var constants = {
         workIntervalLength: 1500/60, // seconds,
         restIntervalLength: 300/60 // seconds
@@ -24,6 +26,7 @@ $(function() {
 
     setInterval(function() {
         $.get("timer", function(data, txtStatus, xhr) {
+            console.log("Received from server: " + JSON.stringify(data));
             onTimerStateReceived(data);
         })
     }, 100);
@@ -69,11 +72,24 @@ $(function() {
         }
 
         if(elapsed) {
+            if(timerState.type == 'work' && elapsed > constants.workIntervalLength
+            || timerState.type == 'rest' && elapsed > constants.restIntervalLength)
+                elapsed--;
+
             minutes = Math.floor(elapsed / 60);
             seconds = elapsed % 60;
+
+            if(minutes<0)
+                minutes=0;
+            if(seconds<0)
+                seconds=0;
+        } else {
+            if(timerState.state != "stopped")
+                minutes = seconds = 0;
         }
         $(".pb-clock-minutes").text(minutes);
         $(".pb-clock-seconds").text(seconds);
+        $(".pb-pomodoro-counter").text(timerState.pomodoroCounter);
     }
 
     function _getCurrentTimestamp() {

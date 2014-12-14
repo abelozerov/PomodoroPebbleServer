@@ -8,7 +8,8 @@ var app = express();
 
 app.use(express.static(__dirname + '/public'));
 app.engine('handlebars', exphbs());
-app.set('view engine', 'handlebars')
+app.set('view engine', 'handlebars');
+app.set('port', process.env.PORT || 3000);
 
 var constants = {
     workIntervalLength: 1500/60, // seconds,
@@ -19,7 +20,8 @@ var currentTimer = {
     timestampStarted: null,
     timestampPaused: null,
     type: "work", // "work" or "rest"
-    state: "stopped" // "stopped" or "progress" or "paused". "stopped" is default
+    state: "stopped", // "stopped" or "progress" or "paused". "stopped" is default
+    pomodoroCounter: 1
 };
 
 app.get('/', function (req, res) {
@@ -95,10 +97,13 @@ setInterval(function() {
         case "progress":
             var timeInterval = _timestampToDate(_getCurrentTimestamp() - currentTimer.timestampStarted);
 
-            if(currentTimer.type == "work" && timeInterval >= constants.workIntervalLength) {
+            if(currentTimer.type == "work" && timeInterval >= constants.workIntervalLength - 1) {
                 currentTimer.type = "rest";
                 currentTimer.timestampStarted = _getCurrentTimestamp() - timeInterval + constants.workIntervalLength;
-            } else if(currentTimer.type == "rest" && timeInterval >= constants.restIntervalLength) {
+            } else if(currentTimer.type == "rest" && timeInterval >= constants.restIntervalLength - 1) {
+                currentTimer.pomodoroCounter++;
+                if(currentTimer.pomodoroCounter > 99)
+                    currentTimer.pomodoroCounter = 1;
                 currentTimer.type = "work";
                 currentTimer.timestampStarted = _getCurrentTimestamp() - timeInterval + constants.restIntervalLength;
             }
@@ -111,7 +116,7 @@ setInterval(function() {
 
 }, 50);
 
-var server = app.listen(3000, function () {
+var server = app.listen(app.get('port'), function () {
 
     var host = server.address().address
     var port = server.address().port
